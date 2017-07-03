@@ -62,9 +62,9 @@ engine.on('ready', function() {
   console.log("Server running at http://" + host + ":" + port + "/");
 
   const { spawn } = require('child_process');
-  const ls = spawn('vlc', ["http://" + host + ":" + port + "/"]); // open the stream in vlc
+  const vlc = spawn('vlc', ["http://" + host + ":" + port + "/"]); // open the stream in vlc
 
-  ls.on('close', (code) => {
+  vlc.on('close', (code) => {
     // close the server
     server.close();
   });
