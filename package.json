@@ -1,0 +1,19 @@
+{
+  "name": "torrenttovlcstream",
+  "version": "1.0.0",
+  "description": "trying to stream video to vlc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leon-4A6C/torrentToVlcStream.git"
+  },
+  "author": "leon in 't Veld",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leon-4A6C/torrentToVlcStream/issues"
+  },
+  "homepage": "https://github.com/leon-4A6C/torrentToVlcStream#readme"
+}
