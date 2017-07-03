@@ -39,16 +39,16 @@ engine.on('ready', function() {
     if (req.headers.range) {   // when client has moved the forward/back slider
       const range = req.headers.range;
       const parts = range.replace(/bytes=/, "").split("-");
-      const partialstart = parts[0];
-      const partialend = parts[1];
+      const partialStart = parts[0];
+      const partialEnd = parts[1];
 
-      const start = parseInt(partialstart, 10);
-      const end = partialend ? parseInt(partialend, 10) : total-1;
-      const chunksize = (end-start)+1;
-      console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
+      const start = parseInt(partialStart, 10);
+      const end = partialEnd ? parseInt(partialEnd, 10) : total-1;
+      const chunkSize = (end-start)+1;
+      console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunkSize);
 
       const fileStream = file.createReadStream({start: start, end: end});
-      res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video' });
+      res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunkSize, 'Content-Type': 'video' });
       fileStream.pipe(res);
 
     } else {
