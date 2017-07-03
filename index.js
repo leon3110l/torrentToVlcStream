@@ -1,20 +1,27 @@
 const http = require('http');
 const fs = require('fs');
 const torrentStream = require("torrent-stream");
-const engine = torrentStream('magnet:?xt=urn:btih:0de7397f926e17d3853690356de81ae6088ca079&dn=Silicon.Valley.S04E10.HDTV.x264-SVA%5Bettv%5D&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969');
+const engine = torrentStream('magnet:?xt=urn:btih:0de7397f926e17d3853690356de81ae6088ca079&dn=Silicon.Valley.S04E10.HDTV.x264-SVA%5Bettv%5D&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969', {path: __dirname + "/tmp/"});
+
+// video formats
+const formats = ["mkv", "avi", "mp4"];
 
 const port = 8888;
 const host = "localhost";
 
+// when the engine is ready look for the video file download it and play/stream it in vlc
 engine.on('ready', function() {
-  const file = engine.files[0];
-  console.log(file.length);
-	console.log('filename:', file.name);
+  // look for a video file
+  const file = engine.files.find(x => {
+    for (var i = 0; i < formats.length; i++) {
+      if (x.name.indexOf(formats[i]) != -1) {
+        return true
+      }
+    }
+  }); // download the file with a video extension
   const server = http.createServer(function (req, res) {
 
     const total = file.length;
-
-    console.log(req.headers);
 
     if (req.headers.range) {   // when client has moved the forward/back slider
       const range = req.headers.range;
@@ -28,7 +35,7 @@ engine.on('ready', function() {
       console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
 
       const fileStream = file.createReadStream({start: start, end: end});
-      res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mkv' });
+      res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video' });
       fileStream.pipe(res);
 
     } else {
