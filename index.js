@@ -1,11 +1,24 @@
 const http = require('http');
 const fs = require('fs');
 const torrentStream = require("torrent-stream");
-const engine = torrentStream('magnet:?xt=urn:btih:0de7397f926e17d3853690356de81ae6088ca079&dn=Silicon.Valley.S04E10.HDTV.x264-SVA%5Bettv%5D&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969', {path: __dirname + "/tmp/"});
+const engine;
+
+const arguments = process.argv;
+let options = {path: __dirname + "/tmp/"};
+for (var i = 0; i < arguments.length; i++) {
+  let val = arguments[i];
+  // have a different path to save
+  if (val.indexOf("-o") != -1) {
+    options.path = arguments[i + 1];
+  } else if (val.indexOf("magnet:") != -1) {
+    engine = torrentStream(val, options); // you should always have the magnet link at the end of the command or it will ignore some options
+  }
+}
 
 // video formats
 const formats = ["mkv", "avi", "mp4"];
 
+// host options
 const port = 8888;
 const host = "localhost";
 
@@ -20,7 +33,7 @@ engine.on('ready', function() {
     }
   }); // download the file with a video extension
   const server = http.createServer(function (req, res) {
-
+    // get file length
     const total = file.length;
 
     if (req.headers.range) {   // when client has moved the forward/back slider
