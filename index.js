@@ -1,17 +1,17 @@
 const http = require('http');
 const fs = require('fs');
 const torrentStream = require("torrent-stream");
-const engine;
+let engine;
 
 const arguments = process.argv;
-let options = {path: __dirname + "/tmp/"};
+let options = {path: __dirname + "/tmp/"}; // default save path
 for (var i = 0; i < arguments.length; i++) {
   let val = arguments[i];
   // have a different path to save
   if (val.indexOf("-o") != -1) {
     options.path = arguments[i + 1];
   } else if (val.indexOf("magnet:") != -1) {
-    engine = torrentStream(val, options); // you should always have the magnet link at the end of the command or it will ignore some options
+    engine = torrentStream(val, options); // you should always have the magnet link at the end of the command or it will ignore some options, and it needs quotes around it
   }
 }
 
