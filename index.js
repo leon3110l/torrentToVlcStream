@@ -13,8 +13,7 @@ const server = http.createServer(function (req, res) {
 
   console.log(req.headers);
 
-  if (req.headers.range) {   // meaning client (browser) has moved the forward/back slider
-                                         // which has sent this request back to this server logic ... cool
+  if (req.headers.range) {   // when client has moved the forward/back slider
     const range = req.headers.range;
     const parts = range.replace(/bytes=/, "").split("-");
     const partialstart = parts[0];
