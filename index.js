@@ -73,7 +73,7 @@ engine.on('ready', function() {
 });
 
 function stream(fileStream, res) {
-  const ffmpeg = spawn('ffmpeg', ["-i", "pipe:0", "-f", "webm", "-vcodec", "libvpx", "-b:v", "4000K", "-speed", "10", "pipe:1"]);
+  const ffmpeg = spawn('ffmpeg', ["-i", "pipe:0", "-f", "webm", "-vcodec", "libvpx", "-b:v", "1700K", "-speed", "16", "pipe:1"]);
   ffmpeg.stderr.on("data", (data) => {
     console.log(data.toString("utf8"));
   });
