@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/leon-4A6C/torrentToVlcStream#readme",
   "dependencies": {
+    "fluent-ffmpeg": "^2.1.2",
     "torrent-stream": "^1.0.3"
   }
 }
