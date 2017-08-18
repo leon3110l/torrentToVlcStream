@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/leon-4A6C/torrentToVlcStream#readme",
   "dependencies": {
-    "torrent-stream": "^1.0.3"
+    "webtorrent": "^0.98.19"
   }
 }

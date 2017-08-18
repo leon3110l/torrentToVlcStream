@@ -1,7 +1,8 @@
 const http = require('http');
-const torrentStream = require("torrent-stream");
 const { spawn } = require('child_process');
-let engine;
+const WebTorrent = require("webtorrent");
+const client = new WebTorrent();
+
 
 const args = process.argv;
 let options = {path: __dirname + "/tmp/"}; // default save path
@@ -11,7 +12,7 @@ for (var i = 0; i < args.length; i++) {
   if (val.indexOf("-o") != -1) {
     options.path = args[i + 1];
   } else if (val.indexOf("magnet:") != -1) {
-    engine = torrentStream(val, options); // you should always have the magnet link at the end of the command or it will ignore some options, and it needs quotes around it
+    client.add(val, options); // you should always have the magnet link at the end of the command or it will ignore some options, and it needs quotes around it
   }
 }
 
@@ -22,14 +23,28 @@ const formats = ["mkv", "avi", "mp4"];
 const port = 8888;
 const host = "localhost";
 
-// when the engine is ready look for the video file download it and play/stream it in vlc
-engine.on('ready', function() {
+// when the client is ready look for the video file download it and play/stream it
+client.on('torrent', (torrent) => {
+
+  // // output some download data
+  // torrent.on('download', function (bytes) {
+  //   console.log('just downloaded: ' + bytes)
+  //   console.log('total downloaded: ' + torrent.downloaded);
+  //   console.log('download speed: ' + torrent.downloadSpeed)
+  //   console.log('progress: ' + torrent.progress)
+  //   console.log('ratio: ' + torrent.ratio)
+  // });
+  // torrent.on('upload', function (bytes) {
+  //   console.log('just uploaded: ' + bytes)
+  //   console.log('total uploaded: ' + torrent.downloaded);
+  //   console.log('upload speed: ' + torrent.downloadSpeed)
+  //   console.log('ratio: ' + torrent.ratio)
+  // });
+
   // look for a video file
-  const file = engine.files.find(x => {
-    for (var i = 0; i < formats.length; i++) {
-      if (x.name.indexOf(formats[i]) != -1) {
-        return true;
-      }
+  const file = torrent.files.find(x => {
+    for (ext of formats) {
+      return x.name.endsWith(ext);
     }
   }); // download the file with a video extension
   const server = http.createServer(function (req, res) {
